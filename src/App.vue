@@ -29,10 +29,12 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "App",
   data() {
     return {
+      api_key: process.env.VUE_APP_API_KEY,
       url_base: "https://api.openweathermap.org/data/2.5/",
       query: "",
       weather: {},
@@ -42,13 +44,13 @@ export default {
   methods: {
     fetchWeather(e) {
       if (e.key == "Enter") {
-        fetch(
-          `${this.url_base}weather?q=${this.query}&units=metric&APPID=${this.api_key}`
-        )
+        axios
+          .get(
+            `${this.url_base}weather?q=${this.query}&units=metric&APPID=${this.api_key}`
+          )
           .then((res) => {
-            return res.json();
-          })
-          .then(this.setResults);
+            return this.setResults(res.data);
+          });
       }
     },
     setResults(results) {
@@ -99,7 +101,7 @@ export default {
 }
 
 body {
-  font-family: 'montserrat', sans-serif;
+  font-family: "montserrat", sans-serif;
 }
 
 #app {
